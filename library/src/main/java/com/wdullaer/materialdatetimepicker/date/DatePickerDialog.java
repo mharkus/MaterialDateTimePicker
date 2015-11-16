@@ -133,6 +133,10 @@ public class DatePickerDialog extends DialogFragment implements
     private String mYearPickerDescription;
     private String mSelectYear;
 
+    private boolean enableCustomButton;
+    private CustomButtonListener customButtonListener;
+    private String customButtonText;
+
     /**
      * The callback used to indicate the user is done filling in the date.
      */
@@ -299,18 +303,35 @@ public class DatePickerDialog extends DialogFragment implements
                 dismiss();
             }
         });
-        okButton.setTypeface(TypefaceHelper.get(activity,"Roboto-Medium"));
+        okButton.setTypeface(TypefaceHelper.get(activity, "Roboto-Medium"));
 
         Button cancelButton = (Button) view.findViewById(R.id.cancel);
         cancelButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 tryVibrate();
-                if(getDialog() != null) getDialog().cancel();
+                if (getDialog() != null) getDialog().cancel();
             }
         });
-        cancelButton.setTypeface(TypefaceHelper.get(activity,"Roboto-Medium"));
+        cancelButton.setTypeface(TypefaceHelper.get(activity, "Roboto-Medium"));
         cancelButton.setVisibility(isCancelable() ? View.VISIBLE : View.GONE);
+
+        Button customButton = (Button) view.findViewById(R.id.custom);
+        customButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (customButtonListener != null) {
+                    tryVibrate();
+                    customButtonListener.onClick();
+                }
+            }
+        });
+
+        customButton.setTypeface(TypefaceHelper.get(activity, "Roboto-Medium"));
+        customButton.setVisibility(enableCustomButton ? View.VISIBLE : View.GONE);
+        if(customButtonText != null){
+            customButton.setText(customButtonText);
+        }
 
         // If an accent color has not been set manually, get it from the context
         if (mAccentColor == -1) {
@@ -320,6 +341,7 @@ public class DatePickerDialog extends DialogFragment implements
         view.findViewById(R.id.day_picker_selected_date_layout).setBackgroundColor(mAccentColor);
         okButton.setTextColor(mAccentColor);
         cancelButton.setTextColor(mAccentColor);
+        customButton.setTextColor(mAccentColor);
 
         if(getDialog() == null) {
             view.findViewById(R.id.done_background).setVisibility(View.GONE);
@@ -856,4 +878,25 @@ public class DatePickerDialog extends DialogFragment implements
                     mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
         }
     }
+
+    public void setEnableCustomButton(boolean enableCustomButton) {
+        this.enableCustomButton = enableCustomButton;
+    }
+
+    public void setCustomButtonListener(CustomButtonListener customButtonListener) {
+        this.customButtonListener = customButtonListener;
+    }
+
+    public void setCustomButtonText(String customButtonText) {
+        this.customButtonText = customButtonText;
+    }
+
+
+
+
+    public interface CustomButtonListener{
+        void onClick();
+    }
+
+
 }

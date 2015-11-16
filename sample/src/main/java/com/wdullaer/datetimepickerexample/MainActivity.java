@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -112,6 +113,15 @@ public class MainActivity extends AppCompatActivity implements
                 if(titleDate.isChecked()) {
                     dpd.setTitle("DatePicker Title");
                 }
+
+                dpd.setCustomButtonText("Semester");
+                dpd.setEnableCustomButton(true);
+                dpd.setCustomButtonListener(new DatePickerDialog.CustomButtonListener() {
+                    @Override
+                    public void onClick() {
+                        Toast.makeText(MainActivity.this, "hello", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 dpd.show(getFragmentManager(), "Datepickerdialog");
             }
         });
